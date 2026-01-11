@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Premium Course Access</title>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  background: #fff;
+  width: 420px;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* 🔽 REDUCE PAYMENT BOX HEIGHT */
+#paymentBox {
+  padding: 10px 5px;
+}
+
+img {
+  width: 180px;          /* ⬅ smaller QR */
+  margin: 8px 0;         /* ⬅ less spacing */
+}
+
+.payment-box {
+  background: #f3f3f3;
+  padding: 6px;
+  border-radius: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.note {
+  color: #d9534f;
+  font-size: 14px;
+}
+
+input, button {
+  width: 400px;
+  padding: 9px;
+  margin-top: 8px;
+}
+
+button {
+  background: #667eea;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.course-list {
+  list-style: none;
+  padding: 0;
+}
+
+.course-list li {
+  margin: 8px 0;
+}
+
+.course-list a {
+  text-decoration: none;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.logout {
+  background: #d9534f;
+}
+
+#error {
+  margin-top: 8px;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- PAYMENT SECTION -->
+  <div id="paymentBox">
+    <h2>🎓 Premium Course Access</h2>
+    <h3>🔒 Content Locked</h3>
+    <p>Pay ₹99 to unlock verified free courses</p>
+
+    <img src="myqr.jpg" alt="Payment QR">
+
+    <div class="payment-box">
+      <p class="note">You’ll receive a payment code after paying</p>
+    </div>
+
+    <input type="text" id="paymentCode" placeholder="Enter Payment Code">
+    <button onclick="verifyPayment()">Verify Payment</button>
+  </div>
+
+  <!-- EMAIL VERIFICATION -->
+  <div id="emailSection" class="hidden">
+    <h3>🔒 Verify Your Email</h3>
+
+    <div id="emailBox">
+      <input type="email" id="userEmail" placeholder="Enter your email">
+      <button onclick="sendOTP()">Send OTP</button>
+    </div>
+
+    <div id="otpBox" class="hidden">
+      <input type="number" id="otpInput" placeholder="Enter OTP">
+      <button onclick="verifyOTP()">Verify OTP</button>
+      <button onclick="sendOTP()">Resend OTP</button>
+    </div>
+  </div>
+
+  <p id="error"></p>
+
+  <!-- ACCESS -->
+  <div id="access" class="hidden">
+    <h3>✅ Access Granted</h3>
+    <ul class="course-list">
+      <li>
+        <a href="https://www.theforage.com/simulations/deloitte-au/technology-fz0w" target="_blank">
+          Deloitte Technology
+        </a>
+      </li>
+      <li>
+        <a href="https://www.theforage.com/simulations/deloitte-au/cyber-c1e3" target="_blank">
+          Deloitte Cyber
+        </a>
+      </li>
+    </ul>
+    <button class="logout" onclick="location.reload()">Logout</button>
+  </div>
+
+</div>
+
+<script>
+emailjs.init("wi4Na4IjcywXp6Cl1");
+
+let generatedOTP = null;
+let paymentVerified = false;
+const MY_SECRET_CODE = "PAY123";
+
+function verifyPayment() {
+  const code = document.getElementById("paymentCode").value.trim();
+  if (code === MY_SECRET_CODE) {
+    paymentVerified = true;
+    paymentBox.style.display = "none";
+    emailSection.classList.remove("hidden");
+    showSuccess("Payment verified");
+  } else {
+    showError("Invalid payment code");
+  }
+}
+
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
+function sendOTP() {
+  if (!paymentVerified) return;
+
+  const email = userEmail.value.trim();
+  if (!email) return showError("Enter email");
+
+  generatedOTP = generateOTP();
+
+  emailjs.send("service_sv9t2yx", "template_i8ddqfl", {
+    to_email: email,
+    otp: generatedOTP
+  }).then(() => {
+    otpBox.classList.remove("hidden");
+    showSuccess("OTP sent");
+  }).catch(() => showError("Email failed"));
+}
+
+function verifyOTP() {
+  if (otpInput.value == generatedOTP) {
+    emailSection.style.display = "none";
+    access.classList.remove("hidden");
+  } else {
+    showError("Wrong OTP");
+  }
+}
+
+function showError(msg) {
+  error.textContent = msg;
+  error.style.color = "red";
+}
+
+function showSuccess(msg) {
+  error.textContent = msg;
+  error.style.color = "green";
+}
+</script>
+
+</body>
+</html>
