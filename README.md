@@ -49,5 +49,30 @@ No real payment verification or secure authentication is implemented.
 
 ---
 
-## 📂 Project Structure
+---
+
+## Brutally honest advice (don’t skip)
+
+- ❌ This is **NOT production-ready**
+- ❌ Anyone can bypass it using DevTools
+- ✅ Still acceptable as a **flow prototype**
+- ✅ Safe for portfolio **if you’re honest**
+
+### If you want this to be real:
+You’ll need:
+- Backend (Node/PHP)
+- Database
+- Payment gateway API
+- Email service API
+- Server-side validation
+
+---
+
+If you want next, I can:
+- Upgrade this to a **real backend architecture**
+- Convert it into a **secure system design document**
+- Help you explain this safely in interviews
+
+Say the word.
+
 
